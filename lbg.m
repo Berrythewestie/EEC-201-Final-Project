@@ -1,38 +1,29 @@
-function y = lbg(coeffs, M, eps)
-    y = mean(coeffs);
-
-    while size(y, 2) < M
-        y = [y + eps; y - eps];
-        new_codebook = y;
-
-        while disteu(y, new_codebook) < eps
-            assignments = assign_vectors_to_codebook(coeffs, y);
-            y = update_codebook(coeffs, assignments, size(y, 2));
-        end
+function y = lbg(coeffs, M, eps1, eps2)
+    arguments
+        coeffs
+        M = 128
+        eps1 = 0.01
+        eps2 = 0.01
     end
-end
 
-function assignments = assign_vectors_to_codebook(training_vectors, codebook)
-    num_vectors = size(training_vectors, 1);
-    num_codewords = size(codebook, 1);
-    assignments = zeros(num_vectors, 1);
+    y = mean(coeffs, 2);
+    m = 1;
     
-    for i = 1:num_vectors
-        distances = sum((training_vectors(i, :) - codebook).^2, 2);
-        [~, idx] = min(distances);
-        assignments(i) = idx;
-    end
-end
-
-function new_codebook = update_codebook(training_vectors, assignments, num_codewords)
-    new_codebook = zeros(num_codewords, size(training_vectors, 2));
-
-    for i = 1:num_codewords
-        assigned_vectors = training_vectors(assignments == i, :);
-        if ~isempty(assigned_vectors)
-            new_codebook(i, :) = mean(assigned_vectors, 1);
-        else
-            new_codebook(i, :) = zeros(1, size(training_vectors, 2));
+    while m < M
+        y = [y + eps1 y - eps1];
+        m = 2 * m;
+        D1 = zeros(m, 1);
+        [M1, I] = min(disteu(y, coeffs));
+        D2 = mean(M1);
+    
+        while abs((D1 - D2) / D2) >= eps2
+            for i = 1 : m
+                y(:, i) = mean(coeffs(:, I == i), 2);
+            end
+    
+            D1 = D2;
+            [M1, I] = min(disteu(y, coeffs));
+            D2 = mean(M1);
         end
     end
 end
