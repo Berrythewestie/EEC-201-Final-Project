@@ -21,7 +21,7 @@ randomNumbers = randperm(18);
 randomNumbers = adjustedIndices(randomNumbers(1 : 10));
 accuracies = zeros(9, 1);
 training{1} = "GivenSpeech_Data/Training_Data/s" + (1 : 11) + ".wav";
-
+training{2} = ["MySpeech_Data/Training_Data/s" + [1 2] + ".wav" training{1}];
 training{3} = "GivenSpeech_Data/Training_Data/s" + (1 : 11) + ".wav";
 training{5} = "2024StudentAudioRecording/Zero-Training/Zero_train" + adjustedIndices + ".wav";
 training{4} = [training{5}(randomNumbers) training{1}];
@@ -30,7 +30,7 @@ training{7} = [training{5} training{6}];
 training{8} = "EEC201AudioRecordings/Five Training/s" + (1 : 23) + ".wav";
 training{9} = "EEC201AudioRecordings/Eleven Training/s" + (1 : 23) + ".wav";
 testing{1} = "GivenSpeech_Data/Test_Data/s" + (1 : 8) + ".wav";
-
+testing{2} = ["MySpeech_Data/Test_Data/s" + [1 2] + ".wav" testing{1}];
 testing{3} = "MySpeech_Data/NotchTest_Data/s" + (1 : 8) + ".wav";
 testing{5} = "2024StudentAudioRecording/Zero-Testing/Zero_test" + adjustedIndices + ".wav";
 testing{4} = [testing{5}(randomNumbers) testing{1}];
